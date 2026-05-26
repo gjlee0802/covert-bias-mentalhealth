@@ -59,6 +59,58 @@ export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
 python3.10 scripts/summarize_mental_health_results.py --model gpt2 --calibrated
 ```
 
+## SAE-only (Top100) Next-token Table
+Nature 논문 설정과 유사하게 SAE 문장만 대상으로 adjective의 다음 1토큰 확률을 집계:
+
+```bash
+python3 scripts/sae_next_token_top100.py \
+  --model gpt2-medium \
+  --top500 top500.txt \
+  --attributes data/attributes/mental_attitudes.txt \
+  --n 100 \
+  --scoring one_token \
+  --calibrate
+```
+
+multi-token adjective를 스킵하지 않으려면:
+
+```bash
+python3 scripts/sae_next_token_top100.py \
+  --model gpt2-medium \
+  --top500 top500.txt \
+  --attributes data/attributes/mental_attitudes.txt \
+  --n 100 \
+  --scoring sequence \
+  --calibrate
+```
+
+출력:
+- `results/sae_top100_next_token_table.csv`
+- `results/sae_top100_next_token_table.md`
+
+## Paper-style Matched-Guise Table
+논문과 같은 형태로 `SAE mean`, `AAE mean`, `delta(AAE-SAE)`를 adjective별 표로 출력:
+
+```bash
+python3 scripts/paper_style_next_token_table.py \
+  --model gpt2-medium \
+  --pair_file data/pairs/top500_sae_aae.txt \
+  --n 100 \
+  --scoring one_token \
+  --calibrate
+```
+
+AAE 데이터가 아직 없을 때(점검용 SAE=AAE baseline):
+
+```bash
+python3 scripts/paper_style_next_token_table.py \
+  --model gpt2-medium \
+  --top500 top500.txt \
+  --n 100 \
+  --scoring one_token \
+  --calibrate
+```
+
 ## 출력 파일
 - `data/pairs/mentalchat16k_sae_sae.txt`
 - `data/pairs/mentalchat16k_sae_aae.txt`

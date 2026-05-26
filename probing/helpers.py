@@ -79,7 +79,7 @@ def load_model(model_name):
     if raw_name in T5_MODELS:
         return T5ForConditionalGeneration.from_pretrained(raw_name)
 
-    return AutoModelForCausalLM.from_pretrained(raw_name)
+    return AutoModelForCausalLM.from_pretrained(raw_name, trust_remote_code=True)
 
 
 def load_tokenizer(model_name):
@@ -95,7 +95,7 @@ def load_tokenizer(model_name):
     if raw_name in T5_MODELS:
         return T5Tokenizer.from_pretrained(raw_name)
 
-    tok = AutoTokenizer.from_pretrained(raw_name, use_fast=True)
+    tok = AutoTokenizer.from_pretrained(raw_name, use_fast=True, trust_remote_code=True)
     if tok.pad_token is None and tok.eos_token is not None:
         tok.pad_token = tok.eos_token
     return tok
